@@ -79,8 +79,8 @@ class Music(commands.Cog):
         """Plays a file from the local filesystem"""
 
         source = discord.PCMVolumeTransformer(discord.FFmpegPCMAudio(query))
-        ctx.voice_client.play(source, after=lambda e: print(f'Player error: {e}') if e else None)
-
+        ctx.voice_client.play(source, after=lambda e: print(f'Player error: {e}') ctx.send(f'Error: {e}') if e else None)
+	
         await ctx.send(f'Now playing: {query}')
 
     @commands.command()
@@ -134,7 +134,7 @@ class Music(commands.Cog):
 
 
 intents = discord.Intents.default()
-intents.message_content = True
+#intents.message_content = True
 
 bot = commands.Bot(
     command_prefix=commands.when_mentioned_or(str(prefix)),
@@ -147,12 +147,10 @@ bot = commands.Bot(
 async def on_ready():
     print(f'Logged in as {bot.user} (ID: {bot.user.id})')
     print('------')
+    print(str(discord.Intents.default()))
 
 
-async def main():
-    async with bot:
-        await bot.add_cog(Music(bot))
-        await bot.start(str(token))
+bot.add_cog(Music(bot))
+bot.run(str(token))
 
 
-asyncio.run(main())
